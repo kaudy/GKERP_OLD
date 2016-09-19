@@ -1,5 +1,6 @@
 $(document).ready(function ()
-{
+{  
+    //Salvar - envia o formulário para ser salvo no banco de dados
     $('#btnSalvar').click(function ()
     {
         var dados =
@@ -23,22 +24,69 @@ $(document).ready(function ()
             var json = JSON.parse(retorno);
 
             if (json.status == 'ok')
-            {                               
+            {
                 notifyMe('Cadastro do fornecedor realizado!');
-                location.href='view-fornecedor.php';
+                location.href = 'view-fornecedor.php';
 
             } else if (json.status == 'erro')
-            {                
+            {
                 notifyMe('Erro ao realizar o cadastro -- ' + json.msg);
             }
         });
-
     });
+ //Cancela o form e apaga todos os dados ----------------------------------------------------------
+ 
+ $('#btnCancelar').click(function ()
+ {
+    $('#txtCNPJ').val(''); 
+    $('#txtRazaoSocial').val('');
+    $('#txtNomeFantasia').val('');
+    $('#txtInscEstadual').val('');
+    $('#txtCNPJ').parent().parent().removeClass('has-error');
+    $('#txtCNPJ').attr('placeholder','Insira o CNPJ');
+     
+ });
+ 
+    
+//Validação do campo CNPJ -------------------------------------------------------------------------
+    
+    $('#txtCNPJ').focusout(function ()
+    {  
+        var retorno = validarCNPJ($('#txtCNPJ').val());
+        
+         console.log(retorno);
+        
+        if(retorno == false)
+        {
+            $('#txtCNPJ').parent().parent().addClass('has-error');
+            $('#txtCNPJ').val('');
+            $('#txtCNPJ').attr('placeholder','CNPJ Invalido');
+        }else
+        {
+            $('#txtCNPJ').parent().parent().removeClass('has-error');
+            $('#txtCNPJ').attr('placeholder','Insira o CNPJ');           
+        }        
+    });
+    
+    
 
 
 
 
-//----------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+//-------------------------------------------------------------------------------------------------
     function notifyMe(texto) {
         // Let's check if the browser supports notifications
         if (!("Notification" in window)) {
