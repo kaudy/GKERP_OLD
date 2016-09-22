@@ -1,5 +1,34 @@
 $(document).ready(function ()
-{  
+{
+    // Cadastrar - envia o formulário para cadastrar novo fornecedor no --------
+    // banco de dados
+    $('#btnAdicionar').click(function ()
+    {
+        var dados =
+                {
+                    cnpj: $('#txtCNPJ').val(),
+                    razaoSocial: $('#txtRazaoSocial').val(),
+                    nomeFantasia: $('#txtNomeFantasia').val(),
+                    inscEstadual: $('#txtInscEstadual').val(),
+                    inscEstadualUF: $('#slctInscEstadualUF').val()
+                };
+
+        $.post('./model/cadastrarFornecedor.php', dados, function (retorno)
+        {
+            var json = JSON.parse(retorno);
+
+            if (json.status == 'ok')
+            {
+                notifyMe('Cadastro do fornecedor realizado!');                
+
+            } else if (json.status == 'erro')
+            {
+                notifyMe('Erro ao realizar o cadastro -- ' + json.msg);
+            }
+        });
+    });
+    //--------------------------------------------------------------------------
+    
     //Salvar - envia o formulário para ser salvo no banco de dados
     $('#btnSalvar').click(function ()
     {
@@ -19,14 +48,14 @@ $(document).ready(function ()
                     estado: $('#slctUF').val()
                 };
 
-        $.post('./model/cadastrarFornecedor.php', dados, function (retorno)
+        $.post('./model/atualizarFornecedor.php', dados, function (retorno)
         {
             var json = JSON.parse(retorno);
 
             if (json.status == 'ok')
             {
-                notifyMe('Cadastro do fornecedor realizado!');
-                location.href = 'view-fornecedor.php';
+                notifyMe('Atualizado os dados do fornecedor!');
+                //location.href = 'view-fornecedor.php';
 
             } else if (json.status == 'erro')
             {
@@ -34,60 +63,102 @@ $(document).ready(function ()
             }
         });
     });
- //Cancela o form e apaga todos os dados ----------------------------------------------------------
- 
- $('#btnCancelar').click(function ()
- {
-    $('#txtCNPJ').val(''); 
-    $('#txtRazaoSocial').val('');
-    $('#txtNomeFantasia').val('');
-    $('#txtInscEstadual').val('');
-    $('#txtCNPJ').parent().parent().removeClass('has-error');
-    $('#txtCNPJ').attr('placeholder','Insira o CNPJ');
-     
- });
- 
     
-//Validação do campo CNPJ -------------------------------------------------------------------------
-    
+    //Cancela o form e apaga todos os dados ------------------------------------
+    $('#btnCancelar').click(function ()
+    {
+        limpaCampos(true);
+
+    });
+
+//Validação do campo CNPJ ------------------------------------------------------
+
     $('#txtCNPJ').focusout(function ()
-    {  
+    {
         var retorno = validarCNPJ($('#txtCNPJ').val());
-        
-         console.log(retorno);
-        
-        if(retorno == false)
+
+        if (retorno == false)
         {
             $('#txtCNPJ').parent().parent().addClass('has-error');
             $('#txtCNPJ').val('');
-            $('#txtCNPJ').attr('placeholder','CNPJ Invalido');
-        }else
+            $('#txtCNPJ').attr('placeholder', 'CNPJ Invalido');
+            limpaCampos(true);
+        } else
         {
+            //Envia dados para model/verificaCnpjFornecedor.php e retorna se 
+            //cnpj já existe no banco de dados
+            var dados =
+                    {
+                        cnpj: $('#txtCNPJ').val()
+                    };
+
+            $.post('./model/verificarCnpjFornecedor.php', dados, function (retorno)
+            {
+               console.log(retorno);
+                var json = JSON.parse(retorno);                 
+
+                if (json.controleretorno.status == 'ok')
+                {    
+                    //Caso cnpj ja esteja cadastrado retorna os dados
+                    $('#txtRazaoSocial').val(json.dadosfornecedor[0].razao_social);
+                    $('#txtNomeFantasia').val(json.dadosfornecedor[0].nome_fantasia);
+                    $('#txtInscEstadual').val(json.dadosfornecedor[0].inscricao_estadual);
+                    $('#slctInscEstadualUF').val(json.dadosfornecedor[0].inscricao_estadual_id_estado);
+                    
+                    //Desativa botão de cadastrar novo e ativa botão de salvar(atualizar)
+                    $('#btnAdicionar').addClass('hide');
+                    $('#btnSalvar').removeClass('hide');
+                    $('#menu-tab-fornecedor li.hide').removeClass('hide');
+                    
+
+                } else if (json.controleretorno.status == 'erro')
+                {
+                    notifyMe(json.controleretorno.msg);
+                    
+                    limpaCampos(false);
+                }
+            });
+
+            //Limpa o campo caso tenha algum alerta de erro
             $('#txtCNPJ').parent().parent().removeClass('has-error');
-            $('#txtCNPJ').attr('placeholder','Insira o CNPJ');           
-        }        
+            $('#txtCNPJ').attr('placeholder', 'Insira o CNPJ');
+        }
     });
-    
-    
 
 
-
-
-
-
-
-
-
-
-
-
-
+//-------------------------------------------------------------------------------------------------
+/*** Retorna os dados para modo original
+ *  @param: limpacnpj 
+ *  @type: boolean
+ *  paramentro caso sim limpa o campo txtCNPJ tambem    
+ */
+//-------------------------------------------------------------------------------------------------
+    function limpaCampos(limpacnpj)
+    {
+        if(limpacnpj==true)
+        {
+            $('#txtCNPJ').val('');
+        }        
+        $('#txtRazaoSocial').val('');
+        $('#txtNomeFantasia').val('');
+        $('#txtInscEstadual').val('');
+        $('#txtCNPJ').parent().parent().removeClass('has-error');
+        $('#txtCNPJ').attr('placeholder', 'Insira o CNPJ');
+        $('#btnSalvar').addClass('hide');
+        $('#btnAdicionar').removeClass('hide');
+        $('#menu-tab-fornecedor-endereco').addClass('hide');
+        $('#menu-tab-fornecedor-emails').addClass('hide');
+        $('#menu-tab-fornecedor-telefones').addClass('hide');        
+    }
 
 
 
 
 //-------------------------------------------------------------------------------------------------
-    function notifyMe(texto) {
+// Gera notificações no desktop
+//-------------------------------------------------------------------------------------------------
+    function notifyMe(texto) 
+    {
         // Let's check if the browser supports notifications
         if (!("Notification" in window)) {
             alert("Este navegador nao suporta notificações na área de trabalho( Use o Google Chrome ou Firefox)");
