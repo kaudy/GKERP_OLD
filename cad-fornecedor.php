@@ -65,7 +65,7 @@
                     <div role="tabpanel" class="tab-pane active" id="fornecedor-tab-geral">
                         <form class="form-horizontal" id="form-cad-fornecedor-geral">
                             <fieldset>
-
+                                <input type="hidden" id="txtId" value="">
                                 <!-- Text input-->
                                 <div class="form-group">
                                     <label class="col-md-4 control-label" for="txtCNPJ">CNPJ*</label>  
@@ -94,7 +94,7 @@
                                 <div class="form-group">
                                     <label class="col-md-4 control-label" for="txtInscEstadual">Inscrição Estadual</label>  
                                     <div class="col-md-4">
-                                        <input id="txtInscEstadual" name="txtInscEstadual" type="text" placeholder="Inscrição Estadual" class="form-control input-md">
+                                        <input id="txtInscEstadual" name="txtInscEstadual" type="text" placeholder="Inscrição Estadual - (Caso seja ISENTO deixar em branco)" class="form-control input-md">
                                     </div>
                                 </div>                
 

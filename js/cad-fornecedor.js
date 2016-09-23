@@ -4,6 +4,11 @@ $(document).ready(function ()
     // banco de dados
     $('#btnAdicionar').click(function ()
     {
+        verificaCampoCnpj();
+        verificaCampoRazaoSocial();
+        verificaCampoNomeFantasia();
+        
+        /*
         var dados =
                 {
                     cnpj: $('#txtCNPJ').val(),
@@ -19,16 +24,16 @@ $(document).ready(function ()
 
             if (json.status == 'ok')
             {
-                notifyMe('Cadastro do fornecedor realizado!');                
+                notifyMe('Cadastro do fornecedor realizado!');
 
             } else if (json.status == 'erro')
             {
-                notifyMe('Erro ao realizar o cadastro -- ' + json.msg);
+                notifyMe(json.msg);
             }
-        });
+        });*/
     });
     //--------------------------------------------------------------------------
-    
+
     //Salvar - envia o formulário para ser salvo no banco de dados
     $('#btnSalvar').click(function ()
     {
@@ -59,30 +64,50 @@ $(document).ready(function ()
 
             } else if (json.status == 'erro')
             {
-                notifyMe('Erro ao realizar o cadastro -- ' + json.msg);
+                notifyMe(json.msg);
+
             }
         });
     });
-    
+
     //Cancela o form e apaga todos os dados ------------------------------------
     $('#btnCancelar').click(function ()
     {
-        limpaCampos(true);
+        limpaCampos(true,true,true);
 
     });
 
-//Validação do campo CNPJ ------------------------------------------------------
-
+    //Validação do campo CNPJ quando perder o foco -----------------------------
     $('#txtCNPJ').focusout(function ()
     {
-        var retorno = validarCNPJ($('#txtCNPJ').val());
+        verificaCampoCnpj();
+    });
+    
+    //Validação do campo Razão Social quando perder o foco ---------------------
+    $('#txtRazaoSocial').focusout(function ()
+    {
+        verificaCampoRazaoSocial();
+    });
+    
+    //Validação do campo Nome Fantasia quando perder o foco --------------------
+    $('#txtNomeFantasia').focusout(function ()
+    {
+        verificaCampoNomeFantasia();
+    });
+    
 
+
+//Verifica o campo CNPJ --------------------------------------------------------    
+    function verificaCampoCnpj()
+    {
+        var retorno = validarCNPJ($('#txtCNPJ').val());
+        
         if (retorno == false)
-        {
+        {           
             $('#txtCNPJ').parent().parent().addClass('has-error');
             $('#txtCNPJ').val('');
             $('#txtCNPJ').attr('placeholder', 'CNPJ Invalido');
-            limpaCampos(true);
+            limpaCampos(true,false,false);
         } else
         {
             //Envia dados para model/verificaCnpjFornecedor.php e retorna se 
@@ -94,28 +119,36 @@ $(document).ready(function ()
 
             $.post('./model/verificarCnpjFornecedor.php', dados, function (retorno)
             {
-               console.log(retorno);
-                var json = JSON.parse(retorno);                 
 
+                var json = JSON.parse(retorno);
+                console.log(json);
                 if (json.controleretorno.status == 'ok')
-                {    
+                {
                     //Caso cnpj ja esteja cadastrado retorna os dados
+                    $('#txtId').val(json.dadosfornecedor[0].id);
                     $('#txtRazaoSocial').val(json.dadosfornecedor[0].razao_social);
                     $('#txtNomeFantasia').val(json.dadosfornecedor[0].nome_fantasia);
                     $('#txtInscEstadual').val(json.dadosfornecedor[0].inscricao_estadual);
                     $('#slctInscEstadualUF').val(json.dadosfornecedor[0].inscricao_estadual_id_estado);
-                    
+                    $('#txtCEP').val(json.dadosfornecedor[0].cep);
+                    $('#txtEndereco').val(json.dadosfornecedor[0].endereco);
+                    $('#txtNumero').val(json.dadosfornecedor[0].numero);
+                    $('#txtComplemento').val(json.dadosfornecedor[0].complemento);
+                    $('#txtBairro').val(json.dadosfornecedor[0].bairro);
+                    $('#txtCidade').val(json.dadosfornecedor[0].id_cidade);
+                    $('#slctUF').val(json.dadosfornecedor[0].id_estado);
+
                     //Desativa botão de cadastrar novo e ativa botão de salvar(atualizar)
                     $('#btnAdicionar').addClass('hide');
                     $('#btnSalvar').removeClass('hide');
                     $('#menu-tab-fornecedor li.hide').removeClass('hide');
-                    
+
 
                 } else if (json.controleretorno.status == 'erro')
                 {
                     notifyMe(json.controleretorno.msg);
-                    
-                    limpaCampos(false);
+
+                    limpaCampos(false,false,false);
                 }
             });
 
@@ -123,32 +156,88 @@ $(document).ready(function ()
             $('#txtCNPJ').parent().parent().removeClass('has-error');
             $('#txtCNPJ').attr('placeholder', 'Insira o CNPJ');
         }
-    });
+    }
+    
+    //Verifica o campo Razão Social --------------------------------------------
+    function verificaCampoRazaoSocial()
+    {        
+        if($('#txtRazaoSocial').val()=='')
+        {
+            $('#txtRazaoSocial').parent().parent().addClass('has-error');
+            $('#txtRazaoSocial').val('');
+            $('#txtRazaoSocial').attr('placeholder', 'Razão Social precisa ser preenchida');            
+        }else
+        {
+            //Limpa o campo caso tenha algum alerta de erro
+            $('#txtRazaoSocial').parent().parent().removeClass('has-error');
+            $('#txtRazaoSocial').attr('placeholder', 'Razão Social');
+        }
+    }
+
+    //Verifica o campo Nome Fantasia -------------------------------------------
+    function verificaCampoNomeFantasia()
+    {        
+        if($('#txtNomeFantasia').val()=='')
+        {
+            $('#txtNomeFantasia').parent().parent().addClass('has-error');
+            $('#txtNomeFantasia').val('');
+            $('#txtNomeFantasia').attr('placeholder', 'Nome Fantasia precisa ser preenchido');            
+        }else
+        {
+            //Limpa o campo caso tenha algum alerta de erro
+            $('#txtNomeFantasia').parent().parent().removeClass('has-error');
+            $('#txtNomeFantasia').attr('placeholder', 'Nome Fantasia');
+        }
+    }
+
+
+
+
 
 
 //-------------------------------------------------------------------------------------------------
-/*** Retorna os dados para modo original
- *  @param: limpacnpj 
- *  @type: boolean
- *  paramentro caso sim limpa o campo txtCNPJ tambem    
- */
+    /*** Retorna os dados para modo original
+     *  @param: limpacnpj,  limparazaosocial
+     *  @type: boolean
+     *  paramentro caso sim limpa o campo de cada parametro tambem    
+     */
 //-------------------------------------------------------------------------------------------------
-    function limpaCampos(limpacnpj)
+    function limpaCampos(limpacnpj,limparazaosocial,limpanomefantasia)
     {
-        if(limpacnpj==true)
+        if (limpacnpj == true)
         {
             $('#txtCNPJ').val('');
-        }        
-        $('#txtRazaoSocial').val('');
-        $('#txtNomeFantasia').val('');
-        $('#txtInscEstadual').val('');
-        $('#txtCNPJ').parent().parent().removeClass('has-error');
-        $('#txtCNPJ').attr('placeholder', 'Insira o CNPJ');
+        }else
+        {
+            $('#txtCNPJ').parent().parent().removeClass('has-error');
+            $('#txtCNPJ').attr('placeholder', 'Insira o CNPJ'); 
+        }
+        
+        if(limparazaosocial==true)
+        {
+            $('#txtRazaoSocial').val('');
+        }else
+        {
+            $('#txtRazaoSocial').parent().parent().removeClass('has-error');
+            $('#txtRazaoSocial').attr('placeholder', 'Razão Social');
+        }
+        
+        if(limpanomefantasia==true)
+        {
+            $('#txtNomeFantasia').val('');
+        }else
+        {
+            $('#txtNomeFantasia').parent().parent().removeClass('has-error');
+            $('#txtNomeFantasia').attr('placeholder', 'Nome Fantasia');
+        }
+        
+        $('#txtId').val(''); 
+        $('#txtInscEstadual').val('');        
         $('#btnSalvar').addClass('hide');
         $('#btnAdicionar').removeClass('hide');
         $('#menu-tab-fornecedor-endereco').addClass('hide');
         $('#menu-tab-fornecedor-emails').addClass('hide');
-        $('#menu-tab-fornecedor-telefones').addClass('hide');        
+        $('#menu-tab-fornecedor-telefones').addClass('hide');
     }
 
 
@@ -157,7 +246,7 @@ $(document).ready(function ()
 //-------------------------------------------------------------------------------------------------
 // Gera notificações no desktop
 //-------------------------------------------------------------------------------------------------
-    function notifyMe(texto) 
+    function notifyMe(texto)
     {
         // Let's check if the browser supports notifications
         if (!("Notification" in window)) {

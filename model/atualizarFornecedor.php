@@ -23,41 +23,23 @@ $idUsuario      = '1';              // Usuario ADM=1 Modificar para pegar o usua
 $ativo          = 'S';              // Ativo - Fixo como Sim(S)
 
 
-$query = "INSERT INTO fornecedor "
-            . "(cnpj,"
-            . " razao_social,"
-            . " nome_fantasia,"
-            . " inscricao_estadual,"
-            . " inscricao_estadual_id_estado,"
-            . " cep,"        
-            . " endereco,"
-            . " numero,"
-            . " complemento,"            
-            . " bairro,"
-            . " id_cidade,"
-            . " id_estado,"            
-            . " id_pais,"
-            . " id_usuario_cadastro,"
-            . " data_cadastro,"
-            . " ativo"
-            . ") ".
-         "VALUES ("
-            . "'$cnpj',"
-            . "'$razaoSocial',"
-            . "'$nomeFantasia',"
-            . "'$inscEstadual',"
-            . "'$inscEstadualUF',"
-            . "'$cep',"
-            . "'$endereco',"
-            . "'$numero',"
-            . "'$complemento',"
-            . "'$bairro',"
-            . "'$cidade',"
-            . "'$estado',"
-            . "'$pais',"
-            . "'$idUsuario',"
-            . "'".$data->format('Y-m-d H:i:s')."',"
-            . "'$ativo')";
+$query="UPDATE fornecedor "
+        . "SET "
+        . "razao_social = '$razaoSocial', "
+        . "nome_fantasia = '$nomeFantasia', "
+        . "inscricao_estadual = $inscEstadual, "
+        . " inscricao_estadual_id_estado = $inscEstadualUF, "
+        . " cep = $cep, "
+        . " endereco = '$endereco', "
+        . " numero = $numero, "
+        . " complemento ='$complemento', "
+        . " bairro = '$bairro', "
+        . " id_cidade = '$cidade', "
+        . " id_estado = $estado, "
+        . " id_pais = $pais, "
+        . " id_usuario_alteracao = $idUsuario, "
+        . " data_alteracao = '".$data->format('Y-m-d H:i:s')."' "
+        . "WHERE cnpj='$cnpj'";
 
 $resultado = $db->exec($query);
 
@@ -67,5 +49,5 @@ if($resultado>0)
 }else
 {
     echo '{"status": "erro",'
-        .'"msg":"Erro ao tentar inserir a OS" }';
+        .'"msg":"Erro ao tentar atualizar os dados do fornecedor" }';
 }
