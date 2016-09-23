@@ -13,6 +13,13 @@ $idUsuario      = '1';              // Usuario ADM=1 Modificar para pegar o usua
 $ativo          = 'S';              // Ativo - Fixo como Sim(S)
 
 
+//Caso inscrição estadual esteja vazia considera-se como isento
+if($inscEstadual=='')
+{
+    $inscEstadual = "ISENTO";
+}
+
+
 $query = "INSERT INTO fornecedor "
             . "(cnpj,"
             . " razao_social,"

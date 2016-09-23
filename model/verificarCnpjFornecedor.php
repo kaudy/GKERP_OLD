@@ -23,7 +23,8 @@ if(count($dadosFornecedor)>0)
         $array['emailsfornecedor']=$emailsFornecedor;   //dados de emails
         
         //retorno
-        $controleRetorno['status']='ok';           
+        $controleRetorno['status']='ok';                //Retorno de sucesso
+        $controleRetorno['quantemails']=count($emailsFornecedor);//Quantidade de e-mails
         $array['controleretorno']=$controleRetorno;
         //retorna o json para o javascript
         echo json_encode($array);    

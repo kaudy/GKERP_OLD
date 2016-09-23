@@ -1,40 +1,45 @@
 $(document).ready(function ()
 {
-    // Cadastrar - envia o formulário para cadastrar novo fornecedor no --------
+    //--------------------------------------------------------------------------
+    // Cadastrar - envia o formulário para cadastrar novo fornecedor no
     // banco de dados
+    //--------------------------------------------------------------------------
     $('#btnAdicionar').click(function ()
     {
         verificaCampoCnpj();
         verificaCampoRazaoSocial();
         verificaCampoNomeFantasia();
         
-        /*
-        var dados =
-                {
-                    cnpj: $('#txtCNPJ').val(),
-                    razaoSocial: $('#txtRazaoSocial').val(),
-                    nomeFantasia: $('#txtNomeFantasia').val(),
-                    inscEstadual: $('#txtInscEstadual').val(),
-                    inscEstadualUF: $('#slctInscEstadualUF').val()
-                };
-
-        $.post('./model/cadastrarFornecedor.php', dados, function (retorno)
+        if($('.has-error input').length==0)
         {
-            var json = JSON.parse(retorno);
+            var dados =
+                    {
+                        cnpj: $('#txtCNPJ').val(),
+                        razaoSocial: $('#txtRazaoSocial').val(),
+                        nomeFantasia: $('#txtNomeFantasia').val(),
+                        inscEstadual: $('#txtInscEstadual').val(),
+                        inscEstadualUF: $('#slctInscEstadualUF').val()
+                    };
 
-            if (json.status == 'ok')
+            $.post('./model/cadastrarFornecedor.php', dados, function (retorno)
             {
-                notifyMe('Cadastro do fornecedor realizado!');
+                var json = JSON.parse(retorno);
 
-            } else if (json.status == 'erro')
-            {
-                notifyMe(json.msg);
-            }
-        });*/
+                if (json.status == 'ok')
+                {
+                    notifyMe('Cadastro do fornecedor realizado!');
+
+                } else if (json.status == 'erro')
+                {
+                    notifyMe(json.msg);
+                }
+            });
+        } 
     });
+    
     //--------------------------------------------------------------------------
-
     //Salvar - envia o formulário para ser salvo no banco de dados
+    //--------------------------------------------------------------------------
     $('#btnSalvar').click(function ()
     {
         var dados =
@@ -52,6 +57,8 @@ $(document).ready(function ()
                     cidade: $('#txtCidade').val(),
                     estado: $('#slctUF').val()
                 };
+                
+                console.log(dados);
 
         $.post('./model/atualizarFornecedor.php', dados, function (retorno)
         {
@@ -69,35 +76,116 @@ $(document).ready(function ()
             }
         });
     });
-
-    //Cancela o form e apaga todos os dados ------------------------------------
+    
+    //--------------------------------------------------------------------------
+    //Cancela o form e apaga todos os dados
+    //--------------------------------------------------------------------------
     $('#btnCancelar').click(function ()
     {
         limpaCampos(true,true,true);
 
     });
 
-    //Validação do campo CNPJ quando perder o foco -----------------------------
+    //--------------------------------------------------------------------------
+    //Validação do campo CNPJ quando perder o foco 
+    //--------------------------------------------------------------------------
     $('#txtCNPJ').focusout(function ()
     {
         verificaCampoCnpj();
     });
     
-    //Validação do campo Razão Social quando perder o foco ---------------------
+    //--------------------------------------------------------------------------
+    //Validação do campo Razão Social quando perder o foco
+    //--------------------------------------------------------------------------
     $('#txtRazaoSocial').focusout(function ()
     {
         verificaCampoRazaoSocial();
     });
     
-    //Validação do campo Nome Fantasia quando perder o foco --------------------
+    //--------------------------------------------------------------------------
+    //Validação do campo Nome Fantasia quando perder o foco
+    //--------------------------------------------------------------------------
     $('#txtNomeFantasia').focusout(function ()
     {
         verificaCampoNomeFantasia();
     });
     
+    //--------------------------------------------------------------------------
+    // Adicionar e-mail fornecedor 
+    // Quando clicado adiciona novo e-mail ao banco de dados
+    // e atualiza a lista
+    //--------------------------------------------------------------------------
+    $('#btnAddEmail-fornecedor').click(function ()
+    {    
+        if($('#cbxAtivo').prop( "checked" )==true)
+        {
+            var ativo = $('#cbxAtivo').val();
+        }else
+        {
+            var ativo = 'N';
+        }        
+        
+        var dados =
+                {
+                    id_fornecedor: $('#txtId').val(),
+                    cnpj: $('#txtCNPJ').val(),
+                    email: $('#txtEmail').val(),                        
+                    ativo: ativo
+                };
 
-
-//Verifica o campo CNPJ --------------------------------------------------------    
+        $.post('./model/cadastrarEmailFornecedor.php', dados, function (retorno)
+        {
+            var json = JSON.parse(retorno);
+            //console.log(json);
+            if (json.status == 'ok')
+            {
+                carregarEmailFornecedor();
+                notifyMe('Cadastro do e-mail realizado realizado!');                
+                $('#modal-add-email-fornecedor').modal('hide');
+                $('#txtEmail').val('');
+                $('#cbxAtivo').prop("checked",false);
+                
+            } else if (json.status == 'erro')
+            {
+                notifyMe(json.msg);
+            }
+        });
+    });
+    
+    //--------------------------------------------------------------------------
+    //Carrega os e-mails do fornecedor 
+    //--------------------------------------------------------------------------
+    function carregarEmailFornecedor()
+    {
+        var dados =
+                {
+                    id_fornecedor: $('#txtId').val()                   
+                };
+        $.post('./model/carregarEmailFornecedor.php', dados, function (retorno)
+        {
+            var json = JSON.parse(retorno);
+            //console.log(json);
+            
+            if (json.controleretorno.status == 'ok')
+            {
+                //Limpa lista dos e-mails ja carregados
+                $('#lista-emails-fornecedor tbody').empty();
+                //Carrega todos os e-mails na lista
+                for(email in json.emailsfornecedor)
+                {
+                    //console.log(json.emailsfornecedor[email]);
+                    addEmailFornecedorLista(json.emailsfornecedor[email]);
+                }
+            }else if (json.controleretorno.status == 'erro')
+            {
+                //console.log(json.controleretorno.msg);
+            }
+        });
+    }
+    
+    //--------------------------------------------------------------------------
+    //Verifica o campo CNPJ 
+    //--------------------------------------------------------------------------   
     function verificaCampoCnpj()
     {
         var retorno = validarCNPJ($('#txtCNPJ').val());
@@ -120,8 +208,7 @@ $(document).ready(function ()
             $.post('./model/verificarCnpjFornecedor.php', dados, function (retorno)
             {
 
-                var json = JSON.parse(retorno);
-                console.log(json);
+                var json = JSON.parse(retorno);                
                 if (json.controleretorno.status == 'ok')
                 {
                     //Caso cnpj ja esteja cadastrado retorna os dados
@@ -142,7 +229,9 @@ $(document).ready(function ()
                     $('#btnAdicionar').addClass('hide');
                     $('#btnSalvar').removeClass('hide');
                     $('#menu-tab-fornecedor li.hide').removeClass('hide');
-
+                    
+                    //Carrega e-mails do fornecedor se existir
+                    carregarEmailFornecedor();
 
                 } else if (json.controleretorno.status == 'erro')
                 {
@@ -190,16 +279,11 @@ $(document).ready(function ()
         }
     }
 
-
-
-
-
-
 //-------------------------------------------------------------------------------------------------
     /*** Retorna os dados para modo original
-     *  @param: limpacnpj,  limparazaosocial
+     *  @param: limpacnpj,  limparazaosocial, limpanomefantasia
      *  @type: boolean
-     *  paramentro caso sim limpa o campo de cada parametro tambem    
+     *  paramentro caso sim(true) limpa o campo de cada parametro tambem    
      */
 //-------------------------------------------------------------------------------------------------
     function limpaCampos(limpacnpj,limparazaosocial,limpanomefantasia)
@@ -216,8 +300,6 @@ $(document).ready(function ()
         if(limparazaosocial==true)
         {
             $('#txtRazaoSocial').val('');
-        }else
-        {
             $('#txtRazaoSocial').parent().parent().removeClass('has-error');
             $('#txtRazaoSocial').attr('placeholder', 'Razão Social');
         }
@@ -225,8 +307,6 @@ $(document).ready(function ()
         if(limpanomefantasia==true)
         {
             $('#txtNomeFantasia').val('');
-        }else
-        {
             $('#txtNomeFantasia').parent().parent().removeClass('has-error');
             $('#txtNomeFantasia').attr('placeholder', 'Nome Fantasia');
         }
@@ -235,13 +315,50 @@ $(document).ready(function ()
         $('#txtInscEstadual').val('');        
         $('#btnSalvar').addClass('hide');
         $('#btnAdicionar').removeClass('hide');
+        
+        //controle tabs - Inicio
+        $('#menu-tab-fornecedor-geral').addClass('active');
+        $('#menu-tab-fornecedor-telefones').prop('aria-expanded',true);        
+        $('#menu-tab-fornecedor-endereco').removeClass('active');
+        $('#menu-tab-fornecedor-emails').removeClass('active');
+        $('#menu-tab-fornecedor-telefones').removeClass('active');        
         $('#menu-tab-fornecedor-endereco').addClass('hide');
         $('#menu-tab-fornecedor-emails').addClass('hide');
         $('#menu-tab-fornecedor-telefones').addClass('hide');
+        
+        $('#fornecedor-tab-geral').addClass('active');
+        $('#fornecedor-tab-endereco').removeClass('active');
+        $('#fornecedor-tab-emails').removeClass('active');
+        $('#fornecedor-tab-telefones').removeClass('active');        
+        //controle tabs - fim
+        
+        
+        $('#lista-emails-fornecedor tbody').empty();
+        
+        $('#txtEmail').val('');
+        $('#cbxAtivo').prop("checked",false);
     }
 
-
-
+//-------------------------------------------------------------------------------------------------
+// Adiciona o e-mail do fornecedor a lista de exibição
+//-------------------------------------------------------------------------------------------------
+function addEmailFornecedorLista(dados)
+{    
+  var linha=$('<tr email-id="'+dados.id+'">'+
+          "<td>"+
+	  dados.email+
+	  '</td>'+
+	  "<td>"+
+	  dados.data_cadastro+
+	  '</td>'+	 
+	  '<td>'+
+	  dados.ativo+
+	  '</td>'+	  
+	  '</tr>');
+  
+    //$(linha).click(abreOs);      
+    $('#lista-emails-fornecedor tbody').append(linha); 
+}
 
 //-------------------------------------------------------------------------------------------------
 // Gera notificações no desktop
@@ -260,7 +377,8 @@ $(document).ready(function ()
         }
 
         // Otherwise, we need to ask the user for permission
-        else if (Notification.permission !== 'denied') {
+        else if (Notification.permission !== 'denied') 
+        {
             Notification.requestPermission(function (permission) {
                 // If the user accepts, let's create a notification
                 if (permission === "granted") {

@@ -1,6 +1,5 @@
 <?php
 
-
 require_once 'config.php';
 
 //Recebimento dos dados do formulario do arquivo cad-fornecedor.php enviados
@@ -27,11 +26,11 @@ $query="UPDATE fornecedor "
         . "SET "
         . "razao_social = '$razaoSocial', "
         . "nome_fantasia = '$nomeFantasia', "
-        . "inscricao_estadual = $inscEstadual, "
+        . "inscricao_estadual = '$inscEstadual', "
         . " inscricao_estadual_id_estado = $inscEstadualUF, "
         . " cep = $cep, "
         . " endereco = '$endereco', "
-        . " numero = $numero, "
+        . " numero = '$numero', "
         . " complemento ='$complemento', "
         . " bairro = '$bairro', "
         . " id_cidade = '$cidade', "
@@ -40,6 +39,8 @@ $query="UPDATE fornecedor "
         . " id_usuario_alteracao = $idUsuario, "
         . " data_alteracao = '".$data->format('Y-m-d H:i:s')."' "
         . "WHERE cnpj='$cnpj'";
+
+//echo $query;
 
 $resultado = $db->exec($query);
 

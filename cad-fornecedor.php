@@ -26,8 +26,8 @@
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="index.php">Principal</a></li>
-                        <li class=""><a href="cad-fornecedor.php">Fornecedor</a></li>
+                        <li class=""><a href="index.php">Principal</a></li>
+                        <li class="active"><a href="cad-fornecedor.php">Fornecedor</a></li>
                         <li><a href="#" data-toggle="modal" data-target="#modal-abrir">Help</a></li>                          
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
@@ -40,159 +40,211 @@
         </nav>
         <!-- Fim do menu de navegação -------------------------------------------------------------------->
 
-        
-            <!-- Form Name -->
-            <legend>Cadastro Fornecedor</legend>
-            <div>
-                <!-- Nav tabs -->
-                <ul class="nav nav-tabs" role="tablist" id="menu-tab-fornecedor">
-                    <li role="presentation" class="active" id="menu-tab-fornecedor-geral">
-                        <a href="#fornecedor-tab-geral" aria-controls="fornecedor-tab-geral" role="tab" data-toggle="tab">Geral</a>
-                    </li>
-                    <li role="presentation" class="hide" id="menu-tab-fornecedor-endereco">
-                        <a href="#fornecedor-tab-endereco" aria-controls="fornecedor-tab-endereco" role="tab" data-toggle="tab">Endereço</a>
-                    </li>
-                    <li role="presentation" class="hide" id="menu-tab-fornecedor-emails">
-                        <a href="#fornecedor-tab-emails" aria-controls="fornecedor-tab-emails" role="tab" data-toggle="tab">E-mails</a>
-                    </li>
-                    <li role="presentation" class="hide" id="menu-tab-fornecedor-telefones">
-                        <a href="#fornecedor-tab-telefones" aria-controls="fornecedor-tab-telefones" role="tab" data-toggle="tab">Telefones</a>
-                    </li>                    
-                </ul>
 
-                <!-- Tab panes -->
-                <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="fornecedor-tab-geral">
-                        <form class="form-horizontal" id="form-cad-fornecedor-geral">
+        <!-- Form Name -->
+    <legend>Cadastro Fornecedor</legend>
+    <div>
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist" id="menu-tab-fornecedor">
+            <li role="presentation" class="active" id="menu-tab-fornecedor-geral">
+                <a href="#fornecedor-tab-geral" aria-controls="fornecedor-tab-geral" role="tab" data-toggle="tab">Geral</a>
+            </li>
+            <li role="presentation" class="hide" id="menu-tab-fornecedor-endereco">
+                <a href="#fornecedor-tab-endereco" aria-controls="fornecedor-tab-endereco" role="tab" data-toggle="tab">Endereço</a>
+            </li>
+            <li role="presentation" class="hide" id="menu-tab-fornecedor-emails">
+                <a href="#fornecedor-tab-emails" aria-controls="fornecedor-tab-emails" role="tab" data-toggle="tab">E-mails</a>
+            </li>
+            <li role="presentation" class="hide" id="menu-tab-fornecedor-telefones">
+                <a href="#fornecedor-tab-telefones" aria-controls="fornecedor-tab-telefones" role="tab" data-toggle="tab">Telefones</a>
+            </li>                    
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="fornecedor-tab-geral">
+                <form class="form-horizontal" id="form-cad-fornecedor-geral">
+                    <fieldset>
+                        <input type="hidden" id="txtId" value="">
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="txtCNPJ">CNPJ*</label>  
+                            <div class="col-md-4">
+                                <input id="txtCNPJ" name="txtCNPJ" type="text" placeholder="Insira o CNPJ" class="form-control input-md">
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="txtRazaoSocial">Razão Social*</label>  
+                            <div class="col-md-4">
+                                <input id="txtRazaoSocial" name="txtRazaoSocial" type="text" placeholder="Razão Social" class="form-control input-md" >
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="txtNomeFantasia">Nome Fantasia*</label>  
+                            <div class="col-md-4">
+                                <input id="txtNomeFantasia" name="txtNomeFantasia" type="text" placeholder="Nome Fantasia" class="form-control input-md">
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="txtInscEstadual">Inscrição Estadual</label>  
+                            <div class="col-md-4">
+                                <input id="txtInscEstadual" name="txtInscEstadual" type="text" placeholder="Inscrição Estadual - (Caso seja ISENTO deixar em branco)" class="form-control input-md">
+                            </div>
+                        </div>                
+
+                        <!-- Select Basic -->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="slctInscEstadualUF">Insc. Estadual UF</label>
+                            <div class="col-md-4">
+                                <select id="slctInscEstadualUF" name="slctInscEstadualUF" class="form-control">
+                                    <option value="1">PR</option>
+                                    <option value="2">RS</option>
+                                    <option value="3">SC</option>
+                                    <option value="4">SP</option>                            
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>               
+            <div role="tabpanel" class="tab-pane" id="fornecedor-tab-endereco">
+                <form class="form-horizontal" id="form-cad-fornecedor-endereco">
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txt">CEP</label>  
+                        <div class="col-md-4">
+                            <input id="txtCEP" name="txtCEP" type="text" placeholder="CEP" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txt">Endereço</label>  
+                        <div class="col-md-4">
+                            <input id="txtEndereco" name="txtEndereco" type="text" placeholder="Endereço" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txt">Numero</label>  
+                        <div class="col-md-4">
+                            <input id="txtNumero" name="txtNumero" type="text" placeholder="Numero" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txt">Complemento</label>  
+                        <div class="col-md-4">
+                            <input id="txtComplemento" name="txtComplemento" type="text" placeholder="Complemento" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txt">Bairro</label>  
+                        <div class="col-md-4">
+                            <input id="txtBairro" name="txtBairro" type="text" placeholder="Bairro" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="txt">Cidade</label>  
+                        <div class="col-md-4">
+                            <input id="txtCidade" name="txtCidade" type="text" placeholder="Cidade" class="form-control input-md">
+                        </div>
+                    </div>
+
+                    <!-- Select Basic -->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="slctUF">Estado</label>
+                        <div class="col-md-4">
+                            <select id="slctUF" name="slctUF" class="form-control">
+                                <option value="1">PR</option>
+                                <option value="2">RS</option>
+                                <option value="3">SC</option>
+                                <option value="4">SP</option>                            
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="fornecedor-tab-emails"> 
+                <br>
+                <div>
+                    <button id="btnAddEmail-modal" name="btnAddEmail-modal" class="btn btn-success" data-toggle="modal" data-target="#modal-add-email-fornecedor">Adicionar e-mail</button>                    
+                </div>
+                <br>
+                <div>
+                    <table class="table table-condensed table-hover" id="lista-emails-fornecedor">
+                        <thead>
+                            <tr>
+                                <th>E-mail</th>
+                                <th>Date de Registro</th>
+                                <th>Status</th>                          
+                            </tr>
+                        </thead>   
+                        <tbody>                                                              
+                        </tbody>
+                    </table>
+                </div>                
+            </div>  
+            <div role="tabpanel" class="tab-pane" id="fornecedor-tab-telefones">
+                <form class="form-horizontal" id="form-cad-fornecedor-telefones">
+                    Telefones
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="modal-add-email-fornecedor" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Adicionar novo e-mail ao fornecedor<span class="campo-numero"></span></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div id="alerta-form" class="alert alert-danger hide" role="alert">Erro ao tentar salvar o e-mail</div>
+                        <form id="form-criar" class="form-horizontal">
                             <fieldset>
-                                <input type="hidden" id="txtId" value="">
                                 <!-- Text input-->
                                 <div class="form-group">
-                                    <label class="col-md-4 control-label" for="txtCNPJ">CNPJ*</label>  
+                                    <label class="col-md-4 control-label" for="txtEmail">Email</label>  
                                     <div class="col-md-4">
-                                        <input id="txtCNPJ" name="txtCNPJ" type="text" placeholder="Insira o CNPJ" class="form-control input-md">
+                                        <input id="txtEmail" name="txtEmail" type="text" placeholder="E-mail" class="form-control input-md">
                                     </div>
                                 </div>
-
-                                <!-- Text input-->
+                                <!-- Multiple Checkboxes (inline) -->
                                 <div class="form-group">
-                                    <label class="col-md-4 control-label" for="txtRazaoSocial">Razão Social*</label>  
+                                    <label class="col-md-4 control-label" for="cbxAtivo">Ativo</label>
                                     <div class="col-md-4">
-                                        <input id="txtRazaoSocial" name="txtRazaoSocial" type="text" placeholder="Razão Social" class="form-control input-md" >
+                                        <label class="checkbox-inline" for="cbxAtivo-0">
+                                            <input type="checkbox" name="cbxAtivo" id="cbxAtivo" value="S">
+                                            Sim
+                                        </label>
                                     </div>
                                 </div>
-
-                                <!-- Text input-->
-                                <div class="form-group">
-                                    <label class="col-md-4 control-label" for="txtNomeFantasia">Nome Fantasia*</label>  
-                                    <div class="col-md-4">
-                                        <input id="txtNomeFantasia" name="txtNomeFantasia" type="text" placeholder="Nome Fantasia" class="form-control input-md">
-                                    </div>
-                                </div>
-
-                                <!-- Text input-->
-                                <div class="form-group">
-                                    <label class="col-md-4 control-label" for="txtInscEstadual">Inscrição Estadual</label>  
-                                    <div class="col-md-4">
-                                        <input id="txtInscEstadual" name="txtInscEstadual" type="text" placeholder="Inscrição Estadual - (Caso seja ISENTO deixar em branco)" class="form-control input-md">
-                                    </div>
-                                </div>                
-
-                                <!-- Select Basic -->
-                                <div class="form-group">
-                                    <label class="col-md-4 control-label" for="slctInscEstadualUF">Insc. Estadual UF</label>
-                                    <div class="col-md-4">
-                                        <select id="slctInscEstadualUF" name="slctInscEstadualUF" class="form-control">
-                                            <option value="1">PR</option>
-                                            <option value="2">RS</option>
-                                            <option value="3">SC</option>
-                                            <option value="4">SP</option>                            
-                                        </select>
-                                    </div>
-                                </div>
-                            </fieldset>
-                        </form>
-                    </div>               
-                    <div role="tabpanel" class="tab-pane" id="fornecedor-tab-endereco">
-                        <form class="form-horizontal" id="form-cad-fornecedor-endereco">
-                            <!-- Text input-->
-                            <div class="form-group">
-                                <label class="col-md-4 control-label" for="txt">CEP</label>  
-                                <div class="col-md-4">
-                                    <input id="txtCEP" name="txtCEP" type="text" placeholder="CEP" class="form-control input-md">
-                                </div>
-                            </div>
-
-                            <!-- Text input-->
-                            <div class="form-group">
-                                <label class="col-md-4 control-label" for="txt">Endereço</label>  
-                                <div class="col-md-4">
-                                    <input id="txtEndereco" name="txtEndereco" type="text" placeholder="Endereço" class="form-control input-md">
-                                </div>
-                            </div>
-
-                            <!-- Text input-->
-                            <div class="form-group">
-                                <label class="col-md-4 control-label" for="txt">Numero</label>  
-                                <div class="col-md-4">
-                                    <input id="txtNumero" name="txtNumero" type="text" placeholder="Numero" class="form-control input-md">
-                                </div>
-                            </div>
-
-                            <!-- Text input-->
-                            <div class="form-group">
-                                <label class="col-md-4 control-label" for="txt">Complemento</label>  
-                                <div class="col-md-4">
-                                    <input id="txtComplemento" name="txtComplemento" type="text" placeholder="Complemento" class="form-control input-md">
-                                </div>
-                            </div>
-
-                            <!-- Text input-->
-                            <div class="form-group">
-                                <label class="col-md-4 control-label" for="txt">Bairro</label>  
-                                <div class="col-md-4">
-                                    <input id="txtBairro" name="txtBairro" type="text" placeholder="Bairro" class="form-control input-md">
-                                </div>
-                            </div>
-
-                            <!-- Text input-->
-                            <div class="form-group">
-                                <label class="col-md-4 control-label" for="txt">Cidade</label>  
-                                <div class="col-md-4">
-                                    <input id="txtCidade" name="txtCidade" type="text" placeholder="Cidade" class="form-control input-md">
-                                </div>
-                            </div>
-
-                            <!-- Select Basic -->
-                            <div class="form-group">
-                                <label class="col-md-4 control-label" for="slctUF">Estado</label>
-                                <div class="col-md-4">
-                                    <select id="slctUF" name="slctUF" class="form-control">
-                                        <option value="1">PR</option>
-                                        <option value="2">RS</option>
-                                        <option value="3">SC</option>
-                                        <option value="4">SP</option>                            
-                                    </select>
-                                </div>
-                            </div>
+                            </fieldset>                           
                         </form>
                     </div>
-                    
-                    
-                    <div role="tabpanel" class="tab-pane" id="fornecedor-tab-emails">
-                        <form class="form-horizontal" id="form-cad-fornecedor-emails">
-                            E-mails
-                        </form>
-                    </div>  
-                    <div role="tabpanel" class="tab-pane" id="fornecedor-tab-telefones">
-                        <form class="form-horizontal" id="form-cad-fornecedor-telefones">
-                        Telefones
-                        </form>
-                    </div>                                        
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button> 
+                        <button id="btnAddEmail-fornecedor" name="btnAddEmail-fornecedor" class="btn btn-success">Salvar</button>
+                    </div>
                 </div>
             </div>
-        </fieldset>
-    </form>
+        </div>
+    </div>
+
     <!-- Button (Double) -->
     <div class="form-group">
         <label class="col-md-4 control-label" for="btnSalvar"></label>
